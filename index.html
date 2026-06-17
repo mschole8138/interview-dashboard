@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  :root {
+    --ink: #1a1f2e;
+    --ink-soft: #4a5068;
+    --ink-faint: #8b92a8;
+    --paper: #f7f8fc;
+    --white: #ffffff;
+    --accent: #1db8a0;
+    --accent-light: #e6f9f6;
+    --accent-dark: #158f7c;
+    --warn: #f59e0b;
+    --warn-light: #fef3c7;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --border: #e2e5ef;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(26,31,46,0.07);
+    --shadow-lg: 0 8px 32px rgba(26,31,46,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+  .header-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── START SCREEN ── */
+  #screen-start {
+    max-width: 620px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+  .start-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .start-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .start-title em { color: var(--accent); font-style: italic; }
+  .start-desc {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .meta-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .meta-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  .meta-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .client-form { margin-bottom: 32px; }
+  .form-row { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 14px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+  /* ── INTERVIEW SCREEN ── */
+  #screen-interview {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 99px;
+    height: 4px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+
+  .topic-pill {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  .question-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 40px;
+    box-shadow: var(--shadow);
+  }
+  .question-number {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+    letter-spacing: 0.06em;
+  }
+  .question-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  .options-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .option-item label {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .option-item input[type="radio"] { display: none; }
+  .option-item label:hover { border-color: var(--accent); background: var(--accent-light); }
+  .option-item input[type="radio"]:checked + label {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .option-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .option-item input[type="radio"]:checked + label .option-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .option-dot::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .option-item input[type="radio"]:checked + label .option-dot::after { opacity: 1; }
+  .option-letter {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    min-width: 16px;
+    margin-top: 2px;
+  }
+  .option-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
+
+  .notes-wrap { margin-top: 24px; }
+  .notes-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  textarea.notes-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color 0.15s;
+    background: var(--paper);
+  }
+  textarea.notes-input:focus { border-color: var(--accent); background: var(--white); }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+  }
+
+  /* ── DASHBOARD SCREEN ── */
+  #screen-dashboard {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  .dash-header { margin-bottom: 40px; }
+  .dash-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .dash-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .dash-subtitle { color: var(--ink-soft); font-size: 14px; }
+
+  .overall-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .kpi-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+  }
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+  }
+  .kpi-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-sub { font-size: 13px; color: var(--ink-soft); }
+  .maturity-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* topic bars */
+  .topics-section { margin-bottom: 40px; }
+  .topic-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .topic-name { width: 130px; font-size: 13px; font-weight: 500; color: var(--ink); flex-shrink: 0; }
+  .topic-bar-bg {
+    flex: 1;
+    background: var(--border);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .topic-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+  .topic-score { width: 48px; text-align: right; font-size: 13px; font-weight: 600; color: var(--ink); }
+
+  /* strengths / weaknesses */
+  .sw-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .sw-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+  }
+  .sw-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sw-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .sw-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  /* insights */
+  .insights-section {
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    color: var(--white);
+  }
+  .insights-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .insight-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #c8cdd8;
+  }
+  .insight-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1.1;
+    flex-shrink: 0;
+    width: 28px;
+  }
+
+  /* answers table */
+  .answers-section { margin-bottom: 40px; }
+  .answers-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .answers-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .answers-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .answers-table tr:last-child td { border-bottom: none; }
+  .answers-table tr:nth-child(even) td { background: var(--paper); }
+  .score-chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 600px) {
+    .overall-row { grid-template-columns: 1fr; }
+    .sw-grid { grid-template-columns: 1fr; }
+    .question-card { padding: 24px 20px; }
+    header { padding: 0 20px; }
+    #screen-interview, #screen-dashboard { padding: 24px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">Interview Dashboard</div>
+  <div class="header-tag">Candidate Assessment Tool</div>
+</header>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — START
+══════════════════════════════════════ -->
+<div id="screen-start" class="screen active">
+  <p class="start-eyebrow">Structured Candidate Interview</p>
+  <h1 class="start-title">Score candidates with <em>consistency</em></h1>
+  <p class="start-desc">
+    Ask structured questions, score responses in real time, and get a clear summary of each candidate's strengths and development areas — ready to review and compare.
+  </p>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <div class="meta-label">Questions</div>
+      <div class="meta-value">10 questions across 4 categories</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Duration</div>
+      <div class="meta-value">Approx. 20–30 minutes</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Categories</div>
+      <div class="meta-value">Experience · Problem Solving · Collaboration · Motivation</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Output</div>
+      <div class="meta-value">Score dashboard + insight summary</div>
+    </div>
+  </div>
+
+  <div class="client-form">
+    <div class="form-row">
+      <label class="form-label" for="candidate-name">Candidate name</label>
+      <input class="form-input" id="candidate-name" type="text" placeholder="e.g. Jane Smith" />
+    </div>
+    <div class="form-row">
+      <label class="form-label" for="interviewer-name">Interviewer name</label>
+      <input class="form-input" id="interviewer-name" type="text" placeholder="Your name" />
+    </div>
+    <div class="form-row">
+      <label class="form-label" for="interview-date">Date</label>
+      <input class="form-input" id="interview-date" type="date" />
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="startInterview()">
+    Start interview
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — INTERVIEW
+══════════════════════════════════════ -->
+<div id="screen-interview" class="screen">
+  <div class="progress-label">
+    <span id="progress-text">Question 1 of 10</span>
+    <span id="progress-pct">0%</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div id="question-container"></div>
+
+  <div class="nav-row">
+    <button class="btn-secondary" id="btn-prev" onclick="prevQuestion()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12L3 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <button class="btn-primary" id="btn-next" onclick="nextQuestion()">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — DASHBOARD
+══════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="dash-header">
+    <div class="dash-eyebrow">Assessment complete</div>
+    <h2 class="dash-title" id="dash-title">Results for Client</h2>
+    <p class="dash-subtitle" id="dash-subtitle"></p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="overall-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Overall score</div>
+      <div class="kpi-value" id="kpi-score">—</div>
+      <div class="kpi-sub">out of 40 points</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Overall rating</div>
+      <div class="kpi-value" style="font-size:26px;margin-top:6px;" id="kpi-maturity">—</div>
+      <div class="maturity-badge" id="kpi-badge"></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Weakest area</div>
+      <div class="kpi-value" style="font-size:20px;margin-top:6px;" id="kpi-priority">—</div>
+      <div class="kpi-sub">lowest scoring category</div>
+    </div>
+  </div>
+
+  <!-- Topic scores -->
+  <div class="topics-section">
+    <div class="section-title">Score by category</div>
+    <div id="topic-bars"></div>
+  </div>
+
+  <!-- Strengths + Weaknesses -->
+  <div class="sw-grid">
+    <div class="sw-card">
+      <div class="sw-card-title" style="color:var(--accent)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8.5l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Strengths
+      </div>
+      <div id="sw-strengths"></div>
+    </div>
+    <div class="sw-card">
+      <div class="sw-card-title" style="color:var(--danger)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Development areas
+      </div>
+      <div id="sw-weaknesses"></div>
+    </div>
+  </div>
+
+  <!-- Insights -->
+  <div class="insights-section">
+    <div class="insights-label">Key insights</div>
+    <div id="insights-list"></div>
+  </div>
+
+  <!-- Answer detail -->
+  <div class="answers-section">
+    <div class="section-title">Answer detail</div>
+    <table class="answers-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Category</th>
+          <th>Question</th>
+          <th>Answer</th>
+          <th>Score</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="answers-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="actions-row">
+    <button class="btn-primary" onclick="window.print()">
+      Export / Print
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6V2h8v4M4 11H2V7h12v4h-2M4 9h8v5H4V9z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="btn-secondary" onclick="resetInterview()">
+      New interview
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8a6 6 0 1 0 1.5-3.9M2 4v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// DATA — 10 candidate interview questions
+const questions = [
+  {
+    id: 1,
+    topic: "Experience & Background",
+    text: "Can you walk me through your professional background and what led you to apply for this role?",
+    options: [
+      { label: "A", text: "Vague or unprepared; no clear narrative or connection to the role", score: 1 },
+      { label: "B", text: "Basic summary of CV; limited connection to why this role specifically", score: 2 },
+      { label: "C", text: "Clear career story with relevant experience highlighted and linked to the role", score: 3 },
+      { label: "D", text: "Compelling, concise narrative that connects past experience directly to the role's needs", score: 4 }
+    ]
+  },
+  {
+    id: 2,
+    topic: "Experience & Background",
+    text: "What has been your most significant professional achievement to date, and why?",
+    options: [
+      { label: "A", text: "Cannot identify a clear achievement or gives a very generic answer", score: 1 },
+      { label: "B", text: "Describes an achievement but without measurable impact or personal contribution", score: 2 },
+      { label: "C", text: "Clear achievement with context, their role, and a tangible outcome", score: 3 },
+      { label: "D", text: "Strong example with measurable results, clear ownership, and lessons drawn", score: 4 }
+    ]
+  },
+  {
+    id: 3,
+    topic: "Problem Solving & Thinking",
+    text: "Tell me about a complex problem you faced at work. How did you approach it?",
+    options: [
+      { label: "A", text: "Describes a simple problem or cannot explain their thinking process", score: 1 },
+      { label: "B", text: "Identifies the problem but the approach was reactive or unclear", score: 2 },
+      { label: "C", text: "Structured approach with clear steps taken and a reasonable outcome", score: 3 },
+      { label: "D", text: "Systematic thinking, proactive diagnosis, strong outcome, and reflection on learning", score: 4 }
+    ]
+  },
+  {
+    id: 4,
+    topic: "Problem Solving & Thinking",
+    text: "How do you make decisions when you don't have all the information you need?",
+    options: [
+      { label: "A", text: "Waits for someone else to decide or freezes under uncertainty", score: 1 },
+      { label: "B", text: "Makes decisions but without a clear framework; mostly gut feeling", score: 2 },
+      { label: "C", text: "Gathers available data, consults others, and makes a reasoned call", score: 3 },
+      { label: "D", text: "Clear decision-making framework; comfortable with ambiguity and explains trade-offs well", score: 4 }
+    ]
+  },
+  {
+    id: 5,
+    topic: "Problem Solving & Thinking",
+    text: "Describe a time you had to change your approach mid-way through a project. What happened?",
+    options: [
+      { label: "A", text: "Cannot recall an example or shows resistance to changing course", score: 1 },
+      { label: "B", text: "Changed approach but only when forced to; limited reflection", score: 2 },
+      { label: "C", text: "Adapted willingly with a clear reason and positive result", score: 3 },
+      { label: "D", text: "Proactively identified the need to pivot, managed the change well, and improved the outcome", score: 4 }
+    ]
+  },
+  {
+    id: 6,
+    topic: "Collaboration & Communication",
+    text: "How do you handle disagreement with a colleague or manager?",
+    options: [
+      { label: "A", text: "Avoids conflict entirely or becomes defensive", score: 1 },
+      { label: "B", text: "Raises the issue but struggles to resolve it constructively", score: 2 },
+      { label: "C", text: "Addresses disagreement directly and professionally, with a focus on the outcome", score: 3 },
+      { label: "D", text: "Uses disagreement as a tool for better decisions; gives a strong example of a positive resolution", score: 4 }
+    ]
+  },
+  {
+    id: 7,
+    topic: "Collaboration & Communication",
+    text: "Tell me about a time you had to work with a difficult team member. How did you handle it?",
+    options: [
+      { label: "A", text: "Blames the other person; no attempt to understand or resolve", score: 1 },
+      { label: "B", text: "Tolerated the situation without actively addressing it", score: 2 },
+      { label: "C", text: "Had a direct conversation and found a workable solution", score: 3 },
+      { label: "D", text: "Showed empathy, took initiative, and turned the relationship into a productive one", score: 4 }
+    ]
+  },
+  {
+    id: 8,
+    topic: "Motivation & Growth",
+    text: "Why do you want this role, and why now?",
+    options: [
+      { label: "A", text: "Generic answer; could apply to any job at any company", score: 1 },
+      { label: "B", text: "Shows some interest but lacks specific reasons tied to this role or company", score: 2 },
+      { label: "C", text: "Clear motivation linked to career goals and genuine interest in the role", score: 3 },
+      { label: "D", text: "Specific, well-researched, and authentic — shows they've thought seriously about fit", score: 4 }
+    ]
+  },
+  {
+    id: 9,
+    topic: "Motivation & Growth",
+    text: "How do you typically learn new skills or stay current in your field?",
+    options: [
+      { label: "A", text: "No proactive learning habits; waits for the company to provide training", score: 1 },
+      { label: "B", text: "Occasionally reads or takes courses but without consistency or direction", score: 2 },
+      { label: "C", text: "Regular habits such as reading, courses, or peer learning; can give examples", score: 3 },
+      { label: "D", text: "Structured, self-directed approach to learning with clear examples of applying new skills", score: 4 }
+    ]
+  },
+  {
+    id: 10,
+    topic: "Motivation & Growth",
+    text: "Where do you see yourself in 3 years, and how does this role fit into that?",
+    options: [
+      { label: "A", text: "No clear answer or an unrealistic expectation", score: 1 },
+      { label: "B", text: "Has a rough idea but it's disconnected from this role or company", score: 2 },
+      { label: "C", text: "Realistic ambition with a logical connection to this role as a stepping stone", score: 3 },
+      { label: "D", text: "Thoughtful, grounded, and shows genuine alignment between their goals and what the role offers", score: 4 }
+    ]
+  }
+];
+
+const topicColors = {
+  "Experience & Background":       { bar: '#1db8a0', text: '#158f7c' },
+  "Problem Solving & Thinking":    { bar: '#6366f1', text: '#4f46e5' },
+  "Collaboration & Communication": { bar: '#f59e0b', text: '#b45309' },
+  "Motivation & Growth":           { bar: '#ec4899', text: '#be185d' }
+};
+
+let currentQ = 0;
+let answers  = new Array(questions.length).fill(null);
+let notes    = new Array(questions.length).fill('');
+let interviewInfo = {};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startInterview() {
+  interviewInfo = {
+    candidate:   document.getElementById('candidate-name').value || 'Candidate',
+    interviewer: document.getElementById('interviewer-name').value || 'Interviewer',
+    date:        document.getElementById('interview-date').value || new Date().toISOString().slice(0,10)
+  };
+  currentQ = 0;
+  answers  = new Array(questions.length).fill(null);
+  notes    = new Array(questions.length).fill('');
+  showScreen('screen-interview');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q         = questions[currentQ];
+  const pct       = Math.round((currentQ / questions.length) * 100);
+  const colors    = topicColors[q.topic];
+  const saved     = answers[currentQ];
+  const savedNote = notes[currentQ];
+
+  document.getElementById('progress-text').textContent = `Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('progress-pct').textContent  = `${pct}%`;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+
+  const optionsHTML = q.options.map((opt, i) => `
+    <li class="option-item">
+      <input type="radio" name="q${currentQ}" id="opt${i}" value="${i}" ${saved === i ? 'checked' : ''}>
+      <label for="opt${i}">
+        <span class="option-dot"></span>
+        <span class="option-letter">${opt.label}</span>
+        <span class="option-text">${opt.text}</span>
+      </label>
+    </li>
+  `).join('');
+
+  document.getElementById('question-container').innerHTML = `
+    <span class="topic-pill" style="background:${colors.bar}20;color:${colors.text}">${q.topic}</span>
+    <div class="question-card">
+      <div class="question-number">Question ${currentQ+1}</div>
+      <div class="question-text">${q.text}</div>
+      <ul class="options-list">${optionsHTML}</ul>
+      <div class="notes-wrap">
+        <div class="notes-label">Notes (optional)</div>
+        <textarea class="notes-input" id="notes-field" placeholder="Add quotes, observations, or context here…">${savedNote}</textarea>
+      </div>
+    </div>
+  `;
+
+  document.querySelectorAll(`input[name="q${currentQ}"]`).forEach(r => {
+    r.addEventListener('change', () => { answers[currentQ] = parseInt(r.value); });
+  });
+
+  document.getElementById('btn-prev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+
+  const isLast = currentQ === questions.length - 1;
+  const btn = document.getElementById('btn-next');
+  btn.innerHTML = isLast
+    ? `View results <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+    : `Next <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function saveCurrentNotes() {
+  const field = document.getElementById('notes-field');
+  if (field) notes[currentQ] = field.value;
+}
+
+function nextQuestion() {
+  saveCurrentNotes();
+  if (currentQ < questions.length - 1) { currentQ++; renderQuestion(); }
+  else { buildDashboard(); showScreen('screen-dashboard'); }
+}
+
+function prevQuestion() {
+  saveCurrentNotes();
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function resetInterview() { showScreen('screen-start'); }
+
+function buildDashboard() {
+  const scored = questions.map((q, i) => ({
+    ...q,
+    chosen: answers[i] !== null ? q.options[answers[i]] : null,
+    score:  answers[i] !== null ? q.options[answers[i]].score : 0,
+    note:   notes[i]
+  }));
+
+  const totalScore = scored.reduce((s, q) => s + q.score, 0);
+  const maxScore   = questions.length * 4;
+  const pct        = Math.round((totalScore / maxScore) * 100);
+
+  const topics = [...new Set(questions.map(q => q.topic))];
+  const topicData = topics.map(t => {
+    const qs  = scored.filter(q => q.topic === t);
+    const sum = qs.reduce((s, q) => s + q.score, 0);
+    const max = qs.length * 4;
+    return { topic: t, score: sum, max, pct: Math.round((sum/max)*100) };
+  }).sort((a,b) => b.pct - a.pct);
+
+  let rating, badgeColor, badgeBg;
+  if (pct >= 80)      { rating = 'Strong candidate';   badgeColor = '#158f7c'; badgeBg = '#e6f9f6'; }
+  else if (pct >= 60) { rating = 'Good candidate';     badgeColor = '#b45309'; badgeBg = '#fef3c7'; }
+  else if (pct >= 40) { rating = 'Possible candidate'; badgeColor = '#9333ea'; badgeBg = '#f3e8ff'; }
+  else                { rating = 'Not recommended';     badgeColor = '#ef4444'; badgeBg = '#fee2e2'; }
+
+  const weakest   = topicData[topicData.length - 1];
+  const strongest = topicData[0];
+  const strengths  = scored.filter(q => q.score >= 3);
+  const weaknesses = scored.filter(q => q.score <= 2);
+
+  document.getElementById('dash-title').textContent    = `Results — ${interviewInfo.candidate}`;
+  document.getElementById('dash-subtitle').textContent = `Interviewed by ${interviewInfo.interviewer} · ${interviewInfo.date}`;
+  document.getElementById('kpi-score').textContent     = `${totalScore}/${maxScore}`;
+  document.getElementById('kpi-maturity').textContent  = rating;
+
+  const badge = document.getElementById('kpi-badge');
+  badge.textContent      = `${pct}% overall`;
+  badge.style.background = badgeBg;
+  badge.style.color      = badgeColor;
+  document.getElementById('kpi-priority').textContent = weakest.topic;
+
+  document.getElementById('topic-bars').innerHTML = topicData.map(t => `
+    <div class="topic-row">
+      <div class="topic-name">${t.topic}</div>
+      <div class="topic-bar-bg">
+        <div class="topic-bar-fill" style="width:0%;background:${topicColors[t.topic].bar}" data-pct="${t.pct}"></div>
+      </div>
+      <div class="topic-score">${t.score}/${t.max}</div>
+    </div>
+  `).join('');
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.topic-bar-fill').forEach(el => { el.style.width = el.dataset.pct + '%'; });
+  });
+
+  document.getElementById('sw-strengths').innerHTML = strengths.length
+    ? strengths.map(q => `<div class="sw-item"><div class="sw-dot" style="background:var(--accent)"></div><span>${q.topic}: ${q.chosen?.text || '—'}</span></div>`).join('')
+    : '<div class="sw-item"><div class="sw-dot" style="background:var(--ink-faint)"></div><span>No strong areas identified</span></div>';
+
+  document.getElementById('sw-weaknesses').innerHTML = weaknesses.length
+    ? weaknesses.map(q => `<div class="sw-item"><div class="sw-dot" style="background:var(--danger)"></div><span>${q.topic}: ${q.chosen?.text || '—'}</span></div>`).join('')
+    : '<div class="sw-item"><div class="sw-dot" style="background:var(--ink-faint)"></div><span>No significant gaps identified</span></div>';
+
+  const insights = generateInsights(pct, topicData, strengths, weaknesses);
+  document.getElementById('insights-list').innerHTML = insights.map((ins, i) => `
+    <div class="insight-item">
+      <div class="insight-num">${String(i+1).padStart(2,'0')}</div>
+      <div>${ins}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('answers-tbody').innerHTML = scored.map((q, i) => {
+    const s = q.score;
+    const chipColor = s >= 3 ? '#158f7c' : s === 2 ? '#b45309' : '#ef4444';
+    const chipBg    = s >= 3 ? '#e6f9f6' : s === 2 ? '#fef3c7' : '#fee2e2';
+    return `
+      <tr>
+        <td style="color:var(--ink-faint);font-weight:600">${i+1}</td>
+        <td><span style="color:${topicColors[q.topic].text};font-weight:600;font-size:12px">${q.topic}</span></td>
+        <td style="max-width:220px;color:var(--ink)">${q.text}</td>
+        <td>${q.chosen ? q.chosen.text : '<em style="color:var(--ink-faint)">Skipped</em>'}</td>
+        <td><span class="score-chip" style="background:${chipBg};color:${chipColor}">${s}/4</span></td>
+        <td style="color:var(--ink-faint);font-style:italic">${q.note || '—'}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function generateInsights(pct, topicData, strengths, weaknesses) {
+  const weakest  = topicData[topicData.length - 1];
+  const strongest = topicData[0];
+  const name     = interviewInfo.candidate;
+  const ins      = [];
+
+  if (pct >= 75) {
+    ins.push(`${name} performed strongly overall (${pct}%), giving structured, specific answers across most categories. They would be a confident addition to the team and warrant serious consideration.`);
+  } else if (pct >= 50) {
+    ins.push(`${name} gave a solid interview (${pct}% overall) with some good moments, but responses lacked consistency across all areas. A second interview or further probing is recommended before a decision.`);
+  } else {
+    ins.push(`${name} struggled to give clear, evidence-based answers across several areas (${pct}% overall). At this stage they would not be a strong fit for the role as described.`);
+  }
+
+  ins.push(`Their weakest category was <strong>${weakest.topic}</strong> (${weakest.pct}%). This is worth exploring further — either in a follow-up conversation or as a key onboarding consideration if they are hired.`);
+
+  ins.push(`Their strongest category was <strong>${strongest.topic}</strong> (${strongest.pct}%), where they gave clear, confident answers. This represents a genuine asset they would bring to the role.`);
+
+  if (weaknesses.length >= 5) {
+    ins.push(`${weaknesses.length} out of 10 responses scored 2 or below. Consider whether a more junior or structured role would be a better fit at this stage.`);
+  } else if (strengths.length >= 7) {
+    ins.push(`${strengths.length} out of 10 responses scored 3 or above — a strong result. The candidate showed consistency and depth, which is a good indicator of real-world performance.`);
+  } else {
+    ins.push(`The results were mixed. If moving forward, align their strengths with the most critical parts of the role, and set clear expectations around the development areas identified.`);
+  }
+
+  return ins;
+}
+</script>
+</body>
+</html>
